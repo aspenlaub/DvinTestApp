@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29409.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvinTestApp", "DvinTestApp.csproj", "{CC104AF5-AF54-4077-BBE8-770EBF17475C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvinTestApp.Test", "Test\DvinTestApp.Test.csproj", "{7D411CB0-5256-4E58-B257-CC0AC9FD0F65}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC104AF5-AF54-4077-BBE8-770EBF17475C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC104AF5-AF54-4077-BBE8-770EBF17475C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC104AF5-AF54-4077-BBE8-770EBF17475C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC104AF5-AF54-4077-BBE8-770EBF17475C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D411CB0-5256-4E58-B257-CC0AC9FD0F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D411CB0-5256-4E58-B257-CC0AC9FD0F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D411CB0-5256-4E58-B257-CC0AC9FD0F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D411CB0-5256-4E58-B257-CC0AC9FD0F65}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {274AEF95-A4AE-48A7-898E-BD480D7C981C}
+	EndGlobalSection
+EndGlobal
