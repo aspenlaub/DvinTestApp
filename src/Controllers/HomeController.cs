@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using Aspenlaub.Net.GitHub.CSharp.Dvin.Attributes;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Extensions;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Interfaces;
+using Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Attributes;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Entities;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +16,12 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Controllers {
 
         public HomeController(IDvinRepository dvinRepository) {
             DvinRepository = dvinRepository;
+            var errorsAndInfos = new ErrorsAndInfos();
+            var dvinApp = DvinRepository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos).Result;
+            if (errorsAndInfos.AnyErrors()) {
+                throw new Exception("Dvin sample app not registered");
+            }
+            DvinExceptionFilterAttribute.SetExceptionLogFolder(new Folder(dvinApp.ExceptionLogFolder));
         }
 
         public IActionResult Index() {
