@@ -28,7 +28,7 @@
     <None Remove="Test\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DvinCore" Version="2.0.145.1017" />
+    <PackageReference Include="DvinCore" Version="2.0.145.1073" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
