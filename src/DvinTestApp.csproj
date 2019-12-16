@@ -28,8 +28,7 @@
     <None Remove="Test\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Aspenlaub.Net.GitHub.CSharp.Dvin" Version="2.0.94.907" />
-    <PackageReference Include="Aspenlaub.Net.GitHub.CSharp.DvinCore" Version="2.0.94.912" />
+    <PackageReference Include="DvinCore" Version="2.0.145.1017" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
