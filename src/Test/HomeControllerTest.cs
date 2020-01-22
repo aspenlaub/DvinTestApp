@@ -11,6 +11,7 @@ using Aspenlaub.Net.GitHub.CSharp.Dvin.Interfaces;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Components;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Entities;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Extensions;
+using Aspenlaub.Net.GitHub.CSharp.Pegh.Interfaces;
 using Autofac;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,14 +19,36 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
     [TestClass]
     public class HomeControllerTest {
-        private readonly IContainer vContainer;
+        private static IContainer vContainer;
 
         private readonly WebApplicationFactory<Startup> vFactory;
 
         public HomeControllerTest() {
+            vFactory = new WebApplicationFactory<Startup>();
+        }
+
+        [ClassInitialize]
+        public static void Initialize(TestContext context) {
             var builder = new ContainerBuilder().UseDvinAndPegh(new DummyCsArgumentPrompter());
             vContainer = builder.Build();
-            vFactory = new WebApplicationFactory<Startup>();
+
+            var errorsAndInfos = new ErrorsAndInfos();
+            var folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
+            Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());
+            folder.CreateIfNecessary();
+        }
+
+        [ClassCleanup]
+        public static void CleanUp() {
+            var errorsAndInfos = new ErrorsAndInfos();
+            var folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
+            Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());
+            Directory.Delete(folder.FullName);
+        }
+
+        private static IFolder TheFolderThatShouldNotBeNeeded(IErrorsAndInfos errorsAndInfos) {
+            var folderResolver = vContainer.Resolve<IFolderResolver>();
+            return folderResolver.Resolve(@"$(GitHub)\DvinTestApp\src\Aspenlaub.Net.GitHub.CSharp.DvinTestApp\", errorsAndInfos);
         }
 
         [TestMethod]
