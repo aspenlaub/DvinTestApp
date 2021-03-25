@@ -41,6 +41,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DvinCore" Version="2.0.573.1109" />
+    <PackageReference Include="DvinCore" Version="2.0.610.1071" />
   </ItemGroup>
 </Project>
