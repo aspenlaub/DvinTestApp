@@ -1,4 +1,4 @@
-using Aspenlaub.Net.GitHub.CSharp.DvinCore.Components;
+using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Components;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
