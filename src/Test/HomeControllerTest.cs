@@ -48,7 +48,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
 
         private static IFolder TheFolderThatShouldNotBeNeeded(IErrorsAndInfos errorsAndInfos) {
             var folderResolver = vContainer.Resolve<IFolderResolver>();
-            return folderResolver.Resolve(@"$(GitHub)\DvinTestApp\src\Aspenlaub.Net.GitHub.CSharp.DvinTestApp\", errorsAndInfos);
+            return folderResolver.ResolveAsync(@"$(GitHub)\DvinTestApp\src\Aspenlaub.Net.GitHub.CSharp.DvinTestApp\", errorsAndInfos).Result;
         }
 
         [TestMethod]
