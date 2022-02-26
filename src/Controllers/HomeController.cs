@@ -13,23 +13,22 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Controllers {
     [DvinExceptionFilter]
     public class HomeController : Controller {
         protected readonly IDvinRepository DvinRepository;
+        protected bool HasExceptionFilterAttributeBeenSet;
 
         public HomeController(IDvinRepository dvinRepository) {
             DvinRepository = dvinRepository;
-            var errorsAndInfos = new ErrorsAndInfos();
-            var dvinApp = DvinRepository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos).Result;
-            if (errorsAndInfos.AnyErrors()) {
-                throw new Exception("Dvin sample app not registered");
-            }
-            DvinExceptionFilterAttribute.SetExceptionLogFolder(new Folder(dvinApp.ExceptionLogFolder));
         }
 
-        public IActionResult Index() {
+        public async Task<IActionResult> Index() {
+            await SetExceptionFilterAttributeIfNecessaryAsync();
+
             return Ok("Hello World says your dvin app");
         }
 
         [HttpGet, Route("/Publish")]
         public async Task<IActionResult> Publish() {
+            await SetExceptionFilterAttributeIfNecessaryAsync();
+
             var errorsAndInfos = new ErrorsAndInfos();
             var dvinApp = await DvinRepository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
             if (errorsAndInfos.AnyErrors()) {
@@ -43,8 +42,22 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Controllers {
                 : Ok("Your dvin app just published itself");
         }
 
-        public IActionResult Crash() {
+        public async Task<IActionResult> Crash() {
+            await SetExceptionFilterAttributeIfNecessaryAsync();
+
             throw new NotImplementedException("This is a deliberate crash");
+        }
+
+        private async Task SetExceptionFilterAttributeIfNecessaryAsync() {
+            if (HasExceptionFilterAttributeBeenSet) { return; }
+
+            var errorsAndInfos = new ErrorsAndInfos();
+            var dvinApp = await DvinRepository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
+            if (errorsAndInfos.AnyErrors()) {
+                throw new Exception("Dvin sample app not registered");
+            }
+            DvinExceptionFilterAttribute.SetExceptionLogFolder(new Folder(dvinApp.ExceptionLogFolder));
+            HasExceptionFilterAttributeBeenSet = true;
         }
     }
 }
