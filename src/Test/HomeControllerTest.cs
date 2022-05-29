@@ -19,18 +19,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
     [TestClass]
     public class HomeControllerTest {
-        private static IContainer vContainer;
+        private static IContainer Container;
 
-        private readonly WebApplicationFactory<Startup> vFactory;
+        private readonly WebApplicationFactory<Startup> Factory;
 
         public HomeControllerTest() {
-            vFactory = new WebApplicationFactory<Startup>();
+            Factory = new WebApplicationFactory<Startup>();
         }
 
         [ClassInitialize]
         public static void Initialize(TestContext context) {
-            var builder = new ContainerBuilder().UseDvinAndPegh(new DummyCsArgumentPrompter());
-            vContainer = builder.Build();
+            var builder = new ContainerBuilder().UseDvinAndPegh("DvinTestApp", new DummyCsArgumentPrompter());
+            Container = builder.Build();
 
             var errorsAndInfos = new ErrorsAndInfos();
             var folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
@@ -47,7 +47,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
         }
 
         private static IFolder TheFolderThatShouldNotBeNeeded(IErrorsAndInfos errorsAndInfos) {
-            var folderResolver = vContainer.Resolve<IFolderResolver>();
+            var folderResolver = Container.Resolve<IFolderResolver>();
             return folderResolver.ResolveAsync(@"$(GitHub)\DvinTestApp\src\Aspenlaub.Net.GitHub.CSharp.DvinTestApp\", errorsAndInfos).Result;
         }
 
@@ -56,7 +56,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
             var dvinApp = await GetDvinApp();
             var url = $"http://localhost:{dvinApp.Port}/Home";
 
-            using var client = vFactory.CreateClient();
+            using var client = Factory.CreateClient();
             Assert.IsNotNull(client);
             var response = await client.GetAsync(url);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -73,7 +73,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
                 File.Delete(file);
             }
 
-            using var client = vFactory.CreateClient();
+            using var client = Factory.CreateClient();
             Assert.IsNotNull(client);
             var response = await client.GetAsync(url);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -93,7 +93,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
             var url = $"http://localhost:{dvinApp.Port}/Publish";
             var fileSystemService = new FileSystemService();
 
-            using var client = vFactory.CreateClient();
+            using var client = Factory.CreateClient();
             Assert.IsNotNull(client);
             var timeBeforePublishing = DateTime.Now;
             var response = await client.GetAsync(url);
@@ -105,7 +105,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
         }
 
         private async Task<DvinApp> GetDvinApp() {
-            var repository = vContainer.Resolve<IDvinRepository>();
+            var repository = Container.Resolve<IDvinRepository>();
             var errorsAndInfos = new ErrorsAndInfos();
             var dvinApp = await repository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
             Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());

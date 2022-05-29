@@ -7,38 +7,38 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 // ReSharper disable UnusedMember.Global
 
-namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp {
-    public class Startup {
-        public Startup(IConfiguration configuration) {
-            Configuration = configuration;
+namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp;
+
+public class Startup {
+    public Startup(IConfiguration configuration) {
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services) {
+        services.AddControllersWithViews();
+        services.UseDvinAndPegh("DvinTestApp", new DummyCsArgumentPrompter());
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+        if (env.IsDevelopment()) {
+            app.UseDeveloperExceptionPage();
+        } else {
+            app.UseExceptionHandler("/Home/Error");
         }
+        app.UseStaticFiles();
 
-        public IConfiguration Configuration { get; }
+        app.UseRouting();
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) {
-            services.AddControllersWithViews();
-            services.UseDvinAndPegh(new DummyCsArgumentPrompter());
-        }
+        app.UseAuthorization();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-            if (env.IsDevelopment()) {
-                app.UseDeveloperExceptionPage();
-            } else {
-                app.UseExceptionHandler("/Home/Error");
-            }
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllerRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
-            });
-        }
+        app.UseEndpoints(endpoints => {
+            endpoints.MapControllerRoute(
+                "default",
+                "{controller=Home}/{action=Index}/{id?}");
+        });
     }
 }
