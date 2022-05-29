@@ -16,7 +16,7 @@ public class Program {
 #if DEBUG
                     .UseDvinAndPeghAsync("DvinTestApp", Constants.DvinSampleAppId, false, args).Result
 #else
-                        .UseDvinAndPeghAsync(Constants.DvinSampleAppId, true, args).Result
+                    .UseDvinAndPeghAsync("DvinTestApp", Constants.DvinSampleAppId, true, args).Result
 #endif
                     .UseStartup<Startup>();
             });
