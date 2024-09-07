@@ -41,6 +41,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dvin-UpToDate" Version="2.0.1578.1227" />
+    <PackageReference Include="Dvin-UpToDate" Version="2.0.1872.483" />
   </ItemGroup>
 </Project>
