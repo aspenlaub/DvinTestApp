@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Entities;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Extensions;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Interfaces;
-using Aspenlaub.Net.GitHub.CSharp.Pegh.Components;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Entities;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Extensions;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Interfaces;
@@ -16,24 +16,22 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#pragma warning disable CA1859
+
 namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
     [TestClass]
     public class HomeControllerTest {
-        private static IContainer Container;
+        private static IContainer _container;
 
-        private readonly WebApplicationFactory<Startup> Factory;
-
-        public HomeControllerTest() {
-            Factory = new WebApplicationFactory<Startup>();
-        }
+        private readonly WebApplicationFactory<Startup> _Factory = new WebApplicationFactory<Startup>();
 
         [ClassInitialize]
         public static void Initialize(TestContext context) {
-            var builder = new ContainerBuilder().UseDvinAndPegh("DvinTestApp", new DummyCsArgumentPrompter());
-            Container = builder.Build();
+            ContainerBuilder builder = new ContainerBuilder().UseDvinAndPegh("DvinTestApp");
+            _container = builder.Build();
 
             var errorsAndInfos = new ErrorsAndInfos();
-            var folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
+            IFolder folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
             Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());
             folder.CreateIfNecessary();
         }
@@ -41,73 +39,73 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
         [ClassCleanup]
         public static void CleanUp() {
             var errorsAndInfos = new ErrorsAndInfos();
-            var folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
+            IFolder folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
             Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());
             Directory.Delete(folder.FullName);
         }
 
         private static IFolder TheFolderThatShouldNotBeNeeded(IErrorsAndInfos errorsAndInfos) {
-            var folderResolver = Container.Resolve<IFolderResolver>();
+            IFolderResolver folderResolver = _container.Resolve<IFolderResolver>();
             return folderResolver.ResolveAsync(@"$(GitHub)\DvinTestApp\src\Aspenlaub.Net.GitHub.CSharp.DvinTestApp\", errorsAndInfos).Result;
         }
 
         [TestMethod]
         public async Task CanCreateTestClient() {
-            var dvinApp = await GetDvinApp();
-            var url = $"http://localhost:{dvinApp.Port}/Home";
+            DvinApp dvinApp = await GetDvinApp();
+            string url = $"http://localhost:{dvinApp.Port}/Home";
 
-            using var client = Factory.CreateClient();
+            using HttpClient client = _Factory.CreateClient();
             Assert.IsNotNull(client);
-            var response = await client.GetAsync(url);
+            HttpResponseMessage response = await client.GetAsync(url);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.IsTrue(content.Contains("Hello World says your dvin app"), content);
+            string content = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Hello World says your dvin app", content, content);
         }
 
         [TestMethod]
         public async Task CanHandleCrashes() {
-            var dvinApp = await GetDvinApp();
-            var url = $"http://localhost:{dvinApp.Port}/Home/Crash";
+            DvinApp dvinApp = await GetDvinApp();
+            string url = $"http://localhost:{dvinApp.Port}/Home/Crash";
 
-            foreach (var file in FilesWithDeliberateExceptionLogged(dvinApp)) {
+            foreach (string file in FilesWithDeliberateExceptionLogged(dvinApp)) {
                 File.Delete(file);
             }
 
-            using var client = Factory.CreateClient();
+            using HttpClient client = _Factory.CreateClient();
             Assert.IsNotNull(client);
-            var response = await client.GetAsync(url);
+            HttpResponseMessage response = await client.GetAsync(url);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.IsTrue(content.Contains("An exception was logged"));
+            string content = await response.Content.ReadAsStringAsync();
+            Assert.Contains("An exception was logged", content);
 
-            var files = FilesWithDeliberateExceptionLogged(dvinApp);
-            Assert.AreEqual(1, files.Count);
-            foreach (var file in files) {
+            IList<string> files = FilesWithDeliberateExceptionLogged(dvinApp);
+            Assert.HasCount(1, files);
+            foreach (string file in files) {
                 File.Delete(file);
             }
         }
 
         [TestMethod]
         public async Task CanPublishMyself() {
-            var dvinApp = await GetDvinApp();
-            var url = $"http://localhost:{dvinApp.Port}/Publish";
+            DvinApp dvinApp = await GetDvinApp();
+            string url = $"http://localhost:{dvinApp.Port}/Publish";
             var fileSystemService = new FileSystemService();
 
-            using var client = Factory.CreateClient();
+            using HttpClient client = _Factory.CreateClient();
             Assert.IsNotNull(client);
-            var timeBeforePublishing = DateTime.Now;
-            var response = await client.GetAsync(url);
+            DateTime timeBeforePublishing = DateTime.Now;
+            HttpResponseMessage response = await client.GetAsync(url);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.IsTrue(content.Contains("Your dvin app just published itself"), content);
-            var lastPublishedAt = dvinApp.LastPublishedAt(fileSystemService);
-            Assert.IsTrue(lastPublishedAt > timeBeforePublishing);
+            string content = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Your dvin app just published itself", content, content);
+            DateTime lastPublishedAt = dvinApp.LastPublishedAt(fileSystemService);
+            Assert.IsGreaterThan(timeBeforePublishing, lastPublishedAt);
         }
 
-        private async Task<DvinApp> GetDvinApp() {
-            var repository = Container.Resolve<IDvinRepository>();
+        private static async Task<DvinApp> GetDvinApp() {
+            IDvinRepository repository = _container.Resolve<IDvinRepository>();
             var errorsAndInfos = new ErrorsAndInfos();
-            var dvinApp = await repository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
+            DvinApp dvinApp = await repository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
             Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());
             Assert.IsNotNull(dvinApp);
             return dvinApp;

@@ -1,5 +1,4 @@
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
-using Aspenlaub.Net.GitHub.CSharp.Pegh.Components;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,17 +8,13 @@ using Microsoft.Extensions.Hosting;
 
 namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp;
 
-public class Startup {
-    public Startup(IConfiguration configuration) {
-        Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
+public class Startup(IConfiguration configuration) {
+    public IConfiguration Configuration { get; } = configuration;
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
         services.AddControllersWithViews();
-        services.UseDvinAndPegh("DvinTestApp", new DummyCsArgumentPrompter());
+        services.UseDvinAndPegh("DvinTestApp");
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

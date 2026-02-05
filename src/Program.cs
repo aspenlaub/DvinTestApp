@@ -14,9 +14,9 @@ public class Program {
             .ConfigureWebHostDefaults(webBuilder => {
                 webBuilder
 #if DEBUG
-                    .UseDvinAndPeghAsync("DvinTestApp", Constants.DvinSampleAppId, false, args).Result
+                    .UseDvinAndPeghAsync("DvinTestApp", Constants.DvinSampleAppId).Result
 #else
-                    .UseDvinAndPeghAsync("DvinTestApp", Constants.DvinSampleAppId, true, args).Result
+                    .UseDvinAndPeghAsync("DvinTestApp", Constants.DvinSampleAppId).Result
 #endif
                     .UseStartup<Startup>();
             });
