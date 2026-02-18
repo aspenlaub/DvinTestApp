@@ -9,9 +9,11 @@ using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Entities;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Extensions;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Interfaces;
-using Aspenlaub.Net.GitHub.CSharp.Pegh.Entities;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Extensions;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Interfaces;
+using Aspenlaub.Net.GitHub.CSharp.Seoa.Extensions;
+using Aspenlaub.Net.GitHub.CSharp.Skladasu.Entities;
+using Aspenlaub.Net.GitHub.CSharp.Skladasu.Interfaces;
 using Autofac;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -32,7 +34,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
 
             var errorsAndInfos = new ErrorsAndInfos();
             IFolder folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
-            Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());
+            Assert.That.ThereWereNoErrors(errorsAndInfos);
             folder.CreateIfNecessary();
         }
 
@@ -40,7 +42,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
         public static void CleanUp() {
             var errorsAndInfos = new ErrorsAndInfos();
             IFolder folder = TheFolderThatShouldNotBeNeeded(errorsAndInfos);
-            Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());
+            Assert.That.ThereWereNoErrors(errorsAndInfos);
             Directory.Delete(folder.FullName);
         }
 
@@ -106,7 +108,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
             IDvinRepository repository = _container.Resolve<IDvinRepository>();
             var errorsAndInfos = new ErrorsAndInfos();
             DvinApp dvinApp = await repository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
-            Assert.IsFalse(errorsAndInfos.AnyErrors(), errorsAndInfos.ErrorsToString());
+            Assert.That.ThereWereNoErrors(errorsAndInfos);
             Assert.IsNotNull(dvinApp);
             return dvinApp;
         }

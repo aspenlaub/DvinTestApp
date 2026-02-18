@@ -2,11 +2,13 @@
 using System.Net;
 using System.Threading.Tasks;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
+using Aspenlaub.Net.GitHub.CSharp.Dvin.Entities;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Extensions;
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Interfaces;
 using Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Attributes;
 using Aspenlaub.Net.GitHub.CSharp.Pegh.Entities;
-using Aspenlaub.Net.GitHub.CSharp.Pegh.Extensions;
+using Aspenlaub.Net.GitHub.CSharp.Skladasu.Entities;
+using Aspenlaub.Net.GitHub.CSharp.Skladasu.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Controllers;
@@ -31,7 +33,7 @@ public class HomeController : Controller {
         await SetExceptionFilterAttributeIfNecessaryAsync();
 
         var errorsAndInfos = new ErrorsAndInfos();
-        var dvinApp = await DvinRepository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
+        DvinApp dvinApp = await DvinRepository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
         if (errorsAndInfos.AnyErrors()) {
             return StatusCode((int) HttpStatusCode.InternalServerError, errorsAndInfos.ErrorsToString());
         }
@@ -53,7 +55,7 @@ public class HomeController : Controller {
         if (HasExceptionFilterAttributeBeenSet) { return; }
 
         var errorsAndInfos = new ErrorsAndInfos();
-        var dvinApp = await DvinRepository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
+        DvinApp dvinApp = await DvinRepository.LoadAsync(Constants.DvinSampleAppId, errorsAndInfos);
         if (errorsAndInfos.AnyErrors()) {
             throw new Exception("Dvin sample app not registered");
         }
