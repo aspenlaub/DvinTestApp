@@ -14,13 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Controllers;
 
 [DvinExceptionFilter]
-public class HomeController : Controller {
-    protected readonly IDvinRepository DvinRepository;
+public class HomeController(IDvinRepository dvinRepository) : Controller {
+    protected readonly IDvinRepository DvinRepository = dvinRepository;
     protected bool HasExceptionFilterAttributeBeenSet;
-
-    public HomeController(IDvinRepository dvinRepository) {
-        DvinRepository = dvinRepository;
-    }
 
     public async Task<IActionResult> Index() {
         await SetExceptionFilterAttributeIfNecessaryAsync();

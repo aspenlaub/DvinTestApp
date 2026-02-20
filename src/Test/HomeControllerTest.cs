@@ -25,7 +25,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
     public class HomeControllerTest {
         private static IContainer _container;
 
-        private readonly WebApplicationFactory<Startup> _Factory = new WebApplicationFactory<Startup>();
+        private readonly WebApplicationFactory<Program> _Factory = new WebApplicationFactory<Program>();
 
         [ClassInitialize]
         public static void Initialize(TestContext context) {
