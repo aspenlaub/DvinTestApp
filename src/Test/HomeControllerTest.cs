@@ -29,7 +29,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Test {
 
         [ClassInitialize]
         public static void Initialize(TestContext context) {
-            ContainerBuilder builder = new ContainerBuilder().UseDvinAndPegh("DvinTestApp");
+            ContainerBuilder builder = new ContainerBuilder().UseDvinAndPegh(Constants.DvinApplicationName);
             _container = builder.Build();
 
             var errorsAndInfos = new ErrorsAndInfos();

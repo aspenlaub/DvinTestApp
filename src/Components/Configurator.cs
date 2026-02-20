@@ -10,12 +10,12 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Components;
 
 public static class Configurator {
     public static void ConfigureBuilder(this IWebHostBuilder builder, string applicationName, string dvinApp) {
-        builder.UseDvinAndPeghAsync("DvinTestApp", Constants.DvinSampleAppId).Wait();
+        builder.UseDvinAndPeghAsync(Constants.DvinApplicationName, Constants.DvinSampleAppId).Wait();
     }
 
     public static void ConfigureServices(IServiceCollection services) {
         services.AddControllersWithViews();
-        services.UseDvinAndPegh("DvinTestApp");
+        services.UseDvinAndPegh(Constants.DvinApplicationName);
     }
 
     public static void Configure(IApplicationBuilder app) {
