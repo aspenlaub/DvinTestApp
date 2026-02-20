@@ -22,8 +22,4 @@ public static class Configurator {
                 "{controller=Home}/{action=Index}/{id?}");
         });
     }
-
-    public static void ConfigureUrl(this IWebHostBuilder builder, string url) {
-        builder.UseUrls(url);
-    }
 }
