@@ -1,3 +1,4 @@
+using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
 using Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -12,7 +13,7 @@ public class Program {
     public static IHostBuilder CreateHostBuilder(string[] args) {
         return Host.CreateDefaultBuilder(args)
            .ConfigureWebHostDefaults(builder => {
-                   builder.ConfigureBuilder(Constants.DvinApplicationName, Constants.DvinSampleAppId);
+                   builder.ConfigureUrl(Constants.DvinApplicationName, Constants.DvinSampleAppId);
                    builder.ConfigureServices(Configurator.ConfigureServices);
                    builder.Configure(Configurator.Configure);
                }

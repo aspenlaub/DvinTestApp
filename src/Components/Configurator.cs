@@ -1,6 +1,5 @@
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable UnusedMember.Global
@@ -8,10 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Components;
 
 public static class Configurator {
-    public static void ConfigureBuilder(this IWebHostBuilder builder, string applicationName, string dvinApp) {
-        builder.ConfigureUrl(Constants.DvinApplicationName, Constants.DvinSampleAppId);
-    }
-
     public static void ConfigureServices(IServiceCollection services) {
         services.AddControllersWithViews();
         services.UseDvinAndPegh(Constants.DvinApplicationName);
