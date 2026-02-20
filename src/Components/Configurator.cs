@@ -1,5 +1,4 @@
 using Aspenlaub.Net.GitHub.CSharp.Dvin.Components;
-using Aspenlaub.Net.GitHub.CSharp.Dvin.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +9,7 @@ namespace Aspenlaub.Net.GitHub.CSharp.DvinTestApp.Components;
 
 public static class Configurator {
     public static void ConfigureBuilder(this IWebHostBuilder builder, string applicationName, string dvinApp) {
-        builder.UseDvinAndPeghAsync(Constants.DvinApplicationName, Constants.DvinSampleAppId).Wait();
+        builder.ConfigureUrl(Constants.DvinApplicationName, Constants.DvinSampleAppId);
     }
 
     public static void ConfigureServices(IServiceCollection services) {
