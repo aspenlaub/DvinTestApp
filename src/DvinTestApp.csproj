@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <AssemblyName>Aspenlaub.Net.GitHub.CSharp.DvinTestApp</AssemblyName>
     <RootNamespace>Aspenlaub.Net.GitHub.CSharp.DvinTestApp</RootNamespace>
     <GenerateBuildInfoConfigFile>false</GenerateBuildInfoConfigFile>
@@ -42,6 +42,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dvin" Version="2.0.2666.1200" />
+    <PackageReference Include="Dvin" Version="2.0.2666.1374" />
   </ItemGroup>
 </Project>
